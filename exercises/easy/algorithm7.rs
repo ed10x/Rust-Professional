@@ -1,8 +1,7 @@
 /*
-	stack
-	This question requires you to use a stack to achieve a bracket match
+    stack
+    This question requires you to use a stack to achieve a bracket match
 */
-
 
 #[derive(Debug)]
 struct Stack<T> {
@@ -32,6 +31,10 @@ impl<T> Stack<T> {
 	}
 	fn pop(&mut self) -> Option<T> {
 		// TODO
+		if self.size > 0 {
+			self.size -= 1;
+			return self.data.pop();
+		}
 		None
 	}
 	fn peek(&self) -> Option<&T> {
@@ -50,18 +53,14 @@ impl<T> Stack<T> {
 		IntoIter(self)
 	}
 	fn iter(&self) -> Iter<T> {
-		let mut iterator = Iter { 
-			stack: Vec::new() 
-		};
+		let mut iterator = Iter { stack: Vec::new() };
 		for item in self.data.iter() {
 			iterator.stack.push(item);
 		}
 		iterator
 	}
 	fn iter_mut(&mut self) -> IterMut<T> {
-		let mut iterator = IterMut { 
-			stack: Vec::new() 
-		};
+		let mut iterator = IterMut { stack: Vec::new() };
 		for item in self.data.iter_mut() {
 			iterator.stack.push(item);
 		}
@@ -73,9 +72,9 @@ impl<T: Clone> Iterator for IntoIter<T> {
 	type Item = T;
 	fn next(&mut self) -> Option<Self::Item> {
 		if !self.0.is_empty() {
-			self.0.size -= 1;self.0.data.pop()
-		} 
-		else {
+			self.0.size -= 1;
+			self.0.data.pop()
+		} else {
 			None
 		}
 	}
@@ -99,44 +98,78 @@ impl<'a, T> Iterator for IterMut<'a, T> {
 	}
 }
 
-fn bracket_match(bracket: &str) -> bool
-{
+fn bracket_match(bracket: &str) -> bool {
 	//TODO
+	let mut stack = Stack::new();
+	for c in bracket.chars() {
+		if c == '(' || c == '[' || c == '{' {
+			stack.push(c);
+		} else if c == ')' {
+			if let Some(temp) = stack.pop() {
+				if temp != '(' {
+					return false;
+				}
+			} else {
+				return false;
+			}
+		} else if c == ']' {
+			if let Some(temp) = stack.pop() {
+				if temp != '[' {
+					return false;
+				}
+			} else {
+				return false;
+			}
+		} else if c == '}' {
+			if let Some(temp) = stack.pop() {
+				if temp != '{' {
+					return false;
+				}
+			} else {
+				return false;
+			}
+		} else {
+			continue;
+		}
+	}
+	if !stack.is_empty() {
+		return false;
+	}
 	true
 }
 
 #[cfg(test)]
 mod tests {
 	use super::*;
-	
+
 	#[test]
-	fn bracket_matching_1(){
+	fn bracket_matching_1() {
 		let s = "(2+3){func}[abc]";
-		assert_eq!(bracket_match(s),true);
+		assert_eq!(bracket_match(s), true);
 	}
 	#[test]
-	fn bracket_matching_2(){
+	fn bracket_matching_2() {
 		let s = "(2+3)*(3-1";
-		assert_eq!(bracket_match(s),false);
+		assert_eq!(bracket_match(s), false);
 	}
 	#[test]
-	fn bracket_matching_3(){
+	fn bracket_matching_3() {
 		let s = "{{([])}}";
-		assert_eq!(bracket_match(s),true);
+		assert_eq!(bracket_match(s), true);
 	}
 	#[test]
-	fn bracket_matching_4(){
+	fn bracket_matching_4() {
 		let s = "{{(}[)]}";
-		assert_eq!(bracket_match(s),false);
+		assert_eq!(bracket_match(s), false);
 	}
 	#[test]
-	fn bracket_matching_5(){
+	fn bracket_matching_5() {
 		let s = "[[[]]]]]]]]]";
-		assert_eq!(bracket_match(s),false);
+		assert_eq!(bracket_match(s), false);
 	}
 	#[test]
-	fn bracket_matching_6(){
+	fn bracket_matching_6() {
 		let s = "";
-		assert_eq!(bracket_match(s),true);
+		assert_eq!(bracket_match(s), true);
 	}
 }

@@ -24,6 +24,7 @@ impl<T> Node<T> {
         }
     }
 }
+
 #[derive(Debug)]
 struct LinkedList<T> {
     length: u32,
@@ -73,7 +74,21 @@ impl<T> LinkedList<T> {
         }
     }
 	pub fn reverse(&mut self){
-		// TODO
+        unsafe {
+            let mut current = self.start;
+            while let Some(mut node) = current {
+                let next = node.as_ref().next;
+                let prev = node.as_ref().prev;
+
+                // Swap next and prev pointers of the current node
+                node.as_mut().next = prev;
+                node.as_mut().prev = next;
+
+                current = next;
+            }
+            // Swap the start and end pointers of the list
+            std::mem::swap(&mut self.start, &mut self.end);
+        }
 	}
 }
 

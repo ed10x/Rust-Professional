@@ -13,7 +13,13 @@ use std::fmt::{self, Display, Formatter};
 
 pub fn intersection(nums1: Vec<i32>, nums2: Vec<i32>) -> Vec<i32> {
     // TODO: Implement the logic to find the intersection of two arrays
-    Vec::new() // Placeholder return value
+    let mut result = Vec::new(); // Placeholder return value
+    for i in 0..nums1.len() {
+        if nums2.contains(&nums1[i]) && !result.contains(&nums1[i]) {
+            result.push(nums1[i]);
+        }
+    }
+    return result;
 }
 
 #[cfg(test)]

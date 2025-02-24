@@ -7,6 +7,7 @@
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
 use std::vec::*;
+use crate::easy::algorithm13::are_anagrams;
 
 #[derive(Debug)]
 struct Node<T> {
@@ -29,13 +30,13 @@ struct LinkedList<T> {
     end: Option<NonNull<Node<T>>>,
 }
 
-impl<T> Default for LinkedList<T> {
+impl<T: PartialOrd+Clone> Default for LinkedList<T> {
     fn default() -> Self {
         Self::new()
     }
 }
 
-impl<T> LinkedList<T> {
+impl<T: PartialOrd+Clone> LinkedList<T> {
     pub fn new() -> Self {
         Self {
             length: 0,
@@ -71,12 +72,32 @@ impl<T> LinkedList<T> {
     }
 	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
 	{
-		//TODO
-		Self {
-            length: 0,
-            start: None,
-            end: None,
+        let mut new_list = LinkedList::new();
+        let mut a_ptr = list_a.start;
+        let mut b_ptr = list_b.start;
+
+        while let(Some(a),Some(b)) = (a_ptr,b_ptr) {
+            let a_val = unsafe {&a.as_ref().val};
+            let b_val = unsafe {&b.as_ref().val};
+
+            if a_val<=b_val{
+                new_list.add(a_val.clone());
+                a_ptr = unsafe {a.as_ref().next};
+            }else {
+                new_list.add(b_val.clone());
+                b_ptr = unsafe { b.as_ref().next};
+            }
+
         }
+
+        let mut remaining = if a_ptr.is_some() {a_ptr} else { b_ptr };
+        while let Some(node) = remaining{
+            let val = unsafe {&node.as_ref().val}.clone();
+            new_list.add(val);
+            remaining = unsafe {node.as_ref().next};
+        }
+
+		new_list
 	}
 }
 

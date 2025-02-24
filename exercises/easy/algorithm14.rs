@@ -1,19 +1,32 @@
 /*
-    Find Duplicates in Array
-    Given an array, find all the duplicate elements and return them. 
-    You need to solve the problem with O(1) space complexity (i.e., without using extra arrays or hash tables).
+    Longest Substring Without Repeating Characters
+    Given a string, find the length of the longest substring without repeating characters.
+    The substring must not contain any duplicate characters, and its length should be maximized.
 
-    Implement the function `find_duplicates(nums: Vec<i32>) -> Vec<i32>`.
-    The function should return a vector containing all the duplicate elements in the array.
-    
-    Hint: You can modify the input array in place to track duplicates.
+    You need to implement the function `longest_substring_without_repeating_chars(s: String) -> i32`.
+    The function should return the length of the longest substring without repeating characters.
+
+    Hint: Consider using the sliding window technique to efficiently solve this problem in O(n) time complexity.
 */
 
+use std::collections::HashMap;
 use std::fmt::{self, Display, Formatter};
 
-pub fn find_duplicates(nums: Vec<i32>) -> Vec<i32> {
-    // TODO: Implement the logic to find all duplicates in the array
-    Vec::new() // Placeholder return value
+pub fn longest_substring_without_repeating_chars(s: String) -> i32 {
+    // TODO: Implement the logic to find the longest substring without repeating characters
+    let mut map = HashMap::new();
+    let mut max_len = 0;
+    let mut start = 0;
+
+    for (end, ch) in s.chars().enumerate() {
+        if let Some(&prev_idx) = map.get(&ch) {
+            start = start.max(prev_idx + 1);
+        }
+        map.insert(ch, end);
+        max_len = max_len.max(end - start + 1);
+    }
+
+    max_len as i32
 }
 
 #[cfg(test)]
@@ -21,42 +34,42 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_find_duplicates_1() {
-        let nums = vec![1, 2, 3, 4, 5, 6, 2, 3];
-        let result = find_duplicates(nums);
-        println!("Duplicates: {:?}", result);
-        assert_eq!(result, vec![2, 3]);
+    fn test_longest_substring_1() {
+        let s = "abcabcbb".to_string();
+        let result = longest_substring_without_repeating_chars(s);
+        println!("Length of longest substring: {}", result);
+        assert_eq!(result, 3); // "abc"
     }
 
     #[test]
-    fn test_find_duplicates_2() {
-        let nums = vec![4, 5, 6, 7, 5, 4];
-        let result = find_duplicates(nums);
-        println!("Duplicates: {:?}", result);
-        assert_eq!(result, vec![4, 5]);
+    fn test_longest_substring_2() {
+        let s = "bbbbb".to_string();
+        let result = longest_substring_without_repeating_chars(s);
+        println!("Length of longest substring: {}", result);
+        assert_eq!(result, 1); // "b"
     }
 
     #[test]
-    fn test_find_duplicates_3() {
-        let nums = vec![1, 2, 3, 4, 5];
-        let result = find_duplicates(nums);
-        println!("Duplicates: {:?}", result);
-        assert_eq!(result, Vec::<i32>::new());
+    fn test_longest_substring_3() {
+        let s = "pwwkew".to_string();
+        let result = longest_substring_without_repeating_chars(s);
+        println!("Length of longest substring: {}", result);
+        assert_eq!(result, 3); // "wke"
     }
 
     #[test]
-    fn test_find_duplicates_4() {
-        let nums = vec![1, 1, 1, 1, 1];
-        let result = find_duplicates(nums);
-        println!("Duplicates: {:?}", result);
-        assert_eq!(result, vec![1]);
+    fn test_longest_substring_4() {
+        let s = "".to_string();
+        let result = longest_substring_without_repeating_chars(s);
+        println!("Length of longest substring: {}", result);
+        assert_eq!(result, 0); // Empty string
     }
 
     #[test]
-    fn test_find_duplicates_5() {
-        let nums = vec![10, 9, 8, 7, 6, 7, 8];
-        let result = find_duplicates(nums);
-        println!("Duplicates: {:?}", result);
-        assert_eq!(result, vec![7, 8]);
+    fn test_longest_substring_5() {
+        let s = "abcde".to_string();
+        let result = longest_substring_without_repeating_chars(s);
+        println!("Length of longest substring: {}", result);
+        assert_eq!(result, 5); // "abcde"
     }
 }

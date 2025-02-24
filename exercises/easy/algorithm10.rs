@@ -1,8 +1,7 @@
 /*
-	graph
-	This problem requires you to implement a basic graph functio
+    graph
+    This problem requires you to implement a basic graph functio
 */
-
 
 use std::collections::{HashMap, HashSet};
 use std::fmt;
@@ -30,6 +29,24 @@ impl Graph for UndirectedGraph {
     }
     fn add_edge(&mut self, edge: (&str, &str, i32)) {
         //TODO
+        let (node1, node2, weight) = edge;
+
+        // Add node1 to the graph if it doesn't exist
+        self.add_node(node1);
+        // Add node2 to the graph if it doesn't exist
+        self.add_node(node2);
+
+        // Add the edge from node1 to node2
+        self.adjacency_table_mutable()
+            .entry(node1.to_string())
+            .or_insert_with(Vec::new)
+            .push((node2.to_string(), weight));
+
+        // Add the edge from node2 to node1
+        self.adjacency_table_mutable()
+            .entry(node2.to_string())
+            .or_insert_with(Vec::new)
+            .push((node1.to_string(), weight));
     }
 }
 pub trait Graph {
@@ -38,10 +55,31 @@ pub trait Graph {
     fn adjacency_table(&self) -> &HashMap<String, Vec<(String, i32)>>;
     fn add_node(&mut self, node: &str) -> bool {
         //TODO
-		true
+        self.adjacency_table_mutable()
+            .entry(node.to_string())
+            .or_insert_with(Vec::new);
+        true
     }
     fn add_edge(&mut self, edge: (&str, &str, i32)) {
         //TODO
+        let (node1, node2, weight) = edge;
+
+        // Add node1 to the graph if it doesn't exist
+        self.add_node(node1);
+        // Add node2 to the graph if it doesn't exist
+        self.add_node(node2);
+
+        // Add the edge from node1 to node2
+        self.adjacency_table_mutable()
+            .entry(node1.to_string())
+            .or_insert_with(Vec::new)
+            .push((node2.to_string(), weight));
+
+        // Add the edge from node2 to node1
+        self.adjacency_table_mutable()
+            .entry(node2.to_string())
+            .or_insert_with(Vec::new)
+            .push((node1.to_string(), weight));
     }
     fn contains(&self, node: &str) -> bool {
         self.adjacency_table().get(node).is_some()
@@ -82,3 +120,4 @@ mod test_undirected_graph {
         }
     }
 }
+
