@@ -36,7 +36,7 @@ where
     }
 
     pub fn add(&mut self, value: T) {
-        //TODO
+
         self.items.push(value);
         self.count += 1;
         self.switch(self.count);
@@ -68,7 +68,7 @@ where
     }
 
     fn smallest_child_idx(&self, idx: usize) -> usize {
-        //TODO
+
         let left = self.left_child_idx(idx);
         let right = self.right_child_idx(idx);
 
@@ -125,7 +125,7 @@ where
     type Item = T;
 
     fn next(&mut self) -> Option<T> {
-        //TODO
+
         self.pop()
     }
 }

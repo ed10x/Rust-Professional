@@ -28,7 +28,7 @@ impl Graph for UndirectedGraph {
         &self.adjacency_table
     }
     fn add_edge(&mut self, edge: (&str, &str, i32)) {
-        //TODO
+
         let (node1, node2, weight) = edge;
 
         // Add node1 to the graph if it doesn't exist
@@ -54,14 +54,14 @@ pub trait Graph {
     fn adjacency_table_mutable(&mut self) -> &mut HashMap<String, Vec<(String, i32)>>;
     fn adjacency_table(&self) -> &HashMap<String, Vec<(String, i32)>>;
     fn add_node(&mut self, node: &str) -> bool {
-        //TODO
+
         self.adjacency_table_mutable()
             .entry(node.to_string())
             .or_insert_with(Vec::new);
         true
     }
     fn add_edge(&mut self, edge: (&str, &str, i32)) {
-        //TODO
+
         let (node1, node2, weight) = edge;
 
         // Add node1 to the graph if it doesn't exist
